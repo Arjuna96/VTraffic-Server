@@ -2,10 +2,37 @@ var MongoClient = require('mongodb').MongoClient ;
 var mongoose = require('mongoose');
 var assert = require('assert')
 
+var Locations = require('./schema.js');
+
 var messages = [{text: 'some text', owner: 'sdsd'}, {text: 'other message', owner: 'ssd'}];
 var data = '' ;
 
 var url = 'mongodb://localhost:27017/test';
+mongoose.connect(url);
+
+var db = mongoose.connection ; 
+
+db.on('error',console.error.bind(console, 'connection error'));
+db.on('open',function(){
+    console.log('connected');
+});
+
+// var newLocation = Locations({
+//     gpsLocation : 6,
+//     routeID : 4,
+//     locationID :212
+// })
+
+
+// newLocation.save(function(err){
+//     if(err) throw err;
+
+//     Locations.find({},function(err,data){
+//         if(err) throw err ;
+//         console.log(data);
+//     })
+// })
+
 
 var setMessage = function (req, res) {
     res.status(200);
@@ -33,10 +60,13 @@ var data = function (req, res) {
 }
 
 var dataMongoo = function (req, res) {
-
-    res.status(200);
-    datas = 'connected Mongoose';
-    res.json(datas);
+    Locations.find({},function(err,data){
+        if(err) throw err ;
+        console.log(data);
+        res.status(200);
+        datas = data;
+        res.json(datas);
+    })
 }
 
 
@@ -48,7 +78,7 @@ var locationData = function (req, res) {
     // name = req.body.name ; 
     // email = req.body.email ;
 
-    locationId = req.body.LocationID ;
+    locationId = req.body.locationID ;
     gpsLocation = req.body.gpsLocation ;
     routeID = req.body.routeID ;
 
