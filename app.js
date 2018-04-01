@@ -6,8 +6,7 @@ var bodyParser = require("body-parser");
 var PORT = process.env.PORT || 2000;
 
 app.get('/msg', (req, res) => {
-  get.SetMessage(req, res);
-
+    server.SetMessage(req, res);
 });
 
 app.use(bodyParser.urlencoded({
@@ -21,8 +20,7 @@ app.post("/Location", function (req, res) {
 });
 
 app.get('/data', (req, res) => {
-    get.DataDB(req, res);
-  
+    server.DataDB(req, res);
 });
 
 app.listen(PORT, function () {

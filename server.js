@@ -1,4 +1,5 @@
 var MongoClient = require('mongodb').MongoClient ;
+var mongoose = require('mongoose');
 var assert = require('assert')
 
 var messages = [{text: 'some text', owner: 'sdsd'}, {text: 'other message', owner: 'ssd'}];
@@ -31,6 +32,13 @@ var data = function (req, res) {
     res.json(datas);
 }
 
+var dataMongoo = function (req, res) {
+
+    res.status(200);
+    datas = 'connected Mongoose';
+    res.json(datas);
+}
+
 
 
 var locationData = function (req, res) {
@@ -45,12 +53,13 @@ var locationData = function (req, res) {
     routeID = req.body.routeID ;
 
     res.status(200);
-    datas = 'Location'+locationId+"gpsLocation"+gpsLocation+"routeID"+routeID;
+    datas = 'Location - '+locationId+"  gpsLocation -"+gpsLocation+"  routeID - "+routeID;
     // datas = "name : "+name+"  email : "+email ; 
     res.json(datas);
 }
 
 
 module.exports.SetMessage = setMessage;
-module.exports.Data = data;
+module.exports.DataDB = data; 
+module.exports.DataMongoo = dataMongoo; 
 module.exports.LocationData = locationData;
