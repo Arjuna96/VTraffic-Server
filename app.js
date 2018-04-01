@@ -23,6 +23,17 @@ app.get('/api/data', (req, res) => {
     server.DataMongoo(req, res);
 });
 
+app.get('/api/addUser', (req, res) => {
+    server.AddUser(req, res);
+});
+
+
+app.get('/api/showUsers', (req, res) => {
+    server.ShowUsers(req, res);
+});
+
+
+
 app.listen(PORT, function () {
     console.log('Working on port ' + PORT);
 });

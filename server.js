@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var assert = require('assert')
 
 var Locations = require('./schema.js');
+var Users = require('./user_schema.js');
 
 var messages = [{text: 'some text', owner: 'sdsd'}, {text: 'other message', owner: 'ssd'}];
 var data = '' ;
@@ -32,6 +33,8 @@ db.on('open',function(){
 //         console.log(data);
 //     })
 // })
+
+
 
 
 var setMessage = function (req, res) {
@@ -69,7 +72,38 @@ var dataMongoo = function (req, res) {
     })
 }
 
+var addUser = function (req, res) {
+    var newUser = Users({
+    name : 'arjuna',
+    password : '1234'
+    })
 
+
+    newUser.save(function(err){
+    if(err) throw err;
+
+    Users.find({},function(err,data){
+        if(err) throw err ;
+        console.log('user'+data);
+        res.status(200);
+        datas = data;
+        res.json(datas);
+        })
+    })
+}
+
+var showUsers = function (req, res) {
+    Users.find({},function(err,data){
+        if(err) throw err ;
+
+        res.status(200);
+        for(var i = 0 ; i < data.length; i++){
+             console.log('user : '+data[i].name);
+        }
+        datas = data[1].name;
+        res.json(datas);
+        })
+}
 
 var locationData = function (req, res) {
 
@@ -93,3 +127,5 @@ module.exports.SetMessage = setMessage;
 module.exports.DataDB = data; 
 module.exports.DataMongoo = dataMongoo; 
 module.exports.LocationData = locationData;
+module.exports.AddUser = addUser; 
+module.exports.ShowUsers = showUsers;
