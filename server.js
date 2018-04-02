@@ -9,6 +9,8 @@ var messages = [{text: 'some text', owner: 'sdsd'}, {text: 'other message', owne
 var data = '' ;
 
 var url = 'mongodb://localhost:27017/test';
+// var url = 'mongodb://localhost:27017/vtraffic';
+
 mongoose.connect(url);
 
 var db = mongoose.connection ; 
@@ -74,10 +76,11 @@ var dataMongoo = function (req, res) {
 
 var addUser = function (req, res) {
     var newUser = Users({
-    name : 'arjuna',
-    password : '1234'
+    // name : 'arjuna',
+    // password : '1234'
+    name :   req.body.name ,
+    password :  req.body.password
     })
-
 
     newUser.save(function(err){
     if(err) throw err;
