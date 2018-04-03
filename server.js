@@ -188,7 +188,6 @@ var locationData = function (req, res) {
     res.json(datas);
 }
 
-
 // api for arduino
 var sendMsgToArduino = function(req,res){
     var TL = req.body.TL ;
@@ -234,4 +233,5 @@ module.exports.Authentication = authentication;
 module.exports.ShowTrafficLightLocation = showTrafficLightLocation;  
 module.exports.AddNewTrafficLight = addNewTrafficLight;  
 module.exports.UpdateUser = updateUser; 
-module.exports.SendMsgToArduino = sendMsgToArduino;
+module.exports.SendMsgToArduino = sendMsgToArduino; 
+module.exports.AddTrafficData = addTrafficData; 
