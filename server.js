@@ -97,6 +97,26 @@ var addUser = function (req, res) {
     })
 }
 
+var updateUser = function (req, res) {
+    
+        var editName = req.body.editName ;
+        var name =  req.body.name ;
+        var password =  req.body.password ;
+        var email = req.body.password ;
+        var mobile_number = req.body.mobile ; 
+
+        var query = {'name': editName}
+
+        Users.update(query, { $set: { name: name }}, function (err, dataUser){
+            if (err) throw err;
+            console.log('user' + data);
+            res.status(200);
+            data = dataUser;
+            res.json(data);
+        })
+
+}
+
 var showUsers = function (req, res) {
     var user = req.body.name ;
     var email = req.body.email ;
@@ -170,4 +190,5 @@ module.exports.AddUser = addUser;
 module.exports.ShowUsers = showUsers;
 module.exports.Authentication = authentication; 
 module.exports.ShowTrafficLightLocation = showTrafficLightLocation;  
-module.exports.AddNewTrafficLight = addNewTrafficLight; 
+module.exports.AddNewTrafficLight = addNewTrafficLight;  
+module.exports.UpdateUser = updateUser;

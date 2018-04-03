@@ -27,6 +27,9 @@ app.get('/api/showUsers', (req, res) => {
     server.ShowUsers(req, res);
 });
 
+app.post('/api/updateUsers', (req, res) => {
+    server.UpdateUser(req, res);
+});
 
 app.post('/api/addTrafficLight', (req, res) => {
     server.AddNewTrafficLight(req, res);
