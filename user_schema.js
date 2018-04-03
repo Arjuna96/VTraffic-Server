@@ -10,6 +10,14 @@ var UserSchema = new Schema ({
     password: {
         type:String,
         require: true, 
+    },
+    email: {
+        type:String,
+        require: true, 
+    },
+    mobile_number: {
+        type:Number,
+        require: true, 
     }
 });
 

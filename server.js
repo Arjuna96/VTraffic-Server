@@ -76,10 +76,10 @@ var dataMongoo = function (req, res) {
 
 var addUser = function (req, res) {
     var newUser = Users({
-    // name : 'arjuna',
-    // password : '1234'
     name :   req.body.name ,
-    password :  req.body.password
+    password :  req.body.password,
+    email : req.body.password,
+    mobile_number : req.body.mobile
     })
 
     newUser.save(function(err){
@@ -110,18 +110,12 @@ var showUsers = function (req, res) {
 
 var locationData = function (req, res) {
 
-    // data from test.html
-
-    // name = req.body.name ; 
-    // email = req.body.email ;
-
     locationId = req.body.locationID ;
     gpsLocation = req.body.gpsLocation ;
     routeID = req.body.routeID ;
 
     res.status(200);
     datas = 'Location - '+locationId+"  gpsLocation -"+gpsLocation+"  routeID - "+routeID;
-    // datas = "name : "+name+"  email : "+email ; 
     res.json(datas);
 }
 
