@@ -39,6 +39,14 @@ app.post('/api/showTrafficLights', (req, res) => {
     server.ShowTrafficLightLocation(req, res);
 });
 
+app.get('/api/sendMsgToArduino', (req, res) => {
+    server.SendMsgToArduino(req, res);
+});
+
+app.get('/api/addTrafficData', (req, res) => {
+    server.AddTrafficData(req, res);
+});
+
 app.post('/api/login', (req, res) => {
     server.Authentication(req, res);
 });

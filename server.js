@@ -4,8 +4,9 @@ var assert = require('assert')
 
 var Locations = require('./traffic_light_schema.js');
 var Users = require('./user_schema.js');
+var Traffic_Data = require('./traffic_data.schema.js');
 
-var messages = [{ text: 'some text', owner: 'sdsd' }, { text: 'other message', owner: 'ssd' }];
+var messages = [{ text: 'some text', owner: 'shanil' }, { text: 'other message', owner: 'arjuna' }];
 var data = '';
 
 var url = 'mongodb://localhost:27017/test';
@@ -48,7 +49,7 @@ var addNewTrafficLight = function (req, res) {
     res.json(datas);
 }
 
-
+// show traffic light data
 var showTrafficLightLocation = function (req, res) {
 
     var locationId = req.body.locationID ;
@@ -69,13 +70,14 @@ var showTrafficLightLocation = function (req, res) {
 }
 
 
+// test function
 var setMessage = function (req, res) {
     res.status(200);
     data = messages;
     res.json(data);
 }
 
-
+// add  new user
 var addUser = function (req, res) {
     var newUser = Users({
         name: req.body.name,
@@ -97,6 +99,7 @@ var addUser = function (req, res) {
     })
 }
 
+// update user
 var updateUser = function (req, res) {
     
         var editName = req.body.editName ;
@@ -117,6 +120,7 @@ var updateUser = function (req, res) {
 
 }
 
+// show current users
 var showUsers = function (req, res) {
     var user = req.body.name ;
     var email = req.body.email ;
@@ -175,7 +179,8 @@ var authentication = function (req, res) {
 var locationData = function (req, res) {
 
     locationId = req.body.locationID;
-    gpsLocation = req.body.gpsLocation;
+    // gpsLocation = req.body.gpsLocation;
+    gpsLocation = req.body.longitude + ","+ req.body.latitude ;
     routeID = req.body.routeID;
 
     res.status(200);
@@ -184,6 +189,43 @@ var locationData = function (req, res) {
 }
 
 
+// api for arduino
+var sendMsgToArduino = function(req,res){
+    var TL = req.body.TL ;
+    
+    res.status(200);
+    datas = 'Change State of -'+TL;
+    res.json(datas);
+}
+
+// add traffic data 
+var addTrafficData = function (req, res) {
+    var newTrafficData = Traffic_Data({
+        TL1: req.body.TL1,
+        TL2: req.body.TL2,
+        TL3: req.body.TL3,
+        TL4: req.body.TL4,
+        TL5: req.body.TL5,
+        TL6: req.body.TL6,
+        TL7: req.body.TL7,
+        TL8: req.body.TL8,
+        LocationID : req.body.LocationID,
+        Time: ObjectId.getTimestamp() 
+    })
+
+    newTrafficData.save(function (err) {
+        if (err) throw err;
+
+        Traffic_Data.find({}, function (err, traffData) {
+            if (err) throw err;
+            console.log('user' + data);
+            res.status(200);
+            data = traffData;
+            res.json(data);
+        })
+    })
+}
+
 module.exports.SetMessage = setMessage;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser;
@@ -191,4 +233,5 @@ module.exports.ShowUsers = showUsers;
 module.exports.Authentication = authentication; 
 module.exports.ShowTrafficLightLocation = showTrafficLightLocation;  
 module.exports.AddNewTrafficLight = addNewTrafficLight;  
-module.exports.UpdateUser = updateUser;
+module.exports.UpdateUser = updateUser; 
+module.exports.SendMsgToArduino = sendMsgToArduino;
