@@ -32,7 +32,9 @@ app.get('/api/showUsers', (req, res) => {
     server.ShowUsers(req, res);
 });
 
-
+app.post('/api/login', (req, res) => {
+    server.Authentication(req, res);
+});
 
 app.listen(PORT, function () {
     console.log('Working on port ' + PORT);

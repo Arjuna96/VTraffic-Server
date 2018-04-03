@@ -41,7 +41,7 @@ db.on('open',function(){
 
 var setMessage = function (req, res) {
     res.status(200);
-    datas = messages;
+    data = messages;
     res.json(datas);
 }
 
@@ -60,7 +60,7 @@ var data = function (req, res) {
     });
 
     res.status(200);
-    datas = 'connected';
+    data = 'connected';
     res.json(datas);
 }
 
@@ -85,28 +85,59 @@ var addUser = function (req, res) {
     newUser.save(function(err){
     if(err) throw err;
 
-    Users.find({},function(err,data){
+    Users.find({},function(err,dataUser){
         if(err) throw err ;
         console.log('user'+data);
         res.status(200);
-        datas = data;
-        res.json(datas);
+        data = dataUser;
+        res.json(data);
         })
     })
 }
 
 var showUsers = function (req, res) {
-    Users.find({},function(err,data){
+    Users.find({},function(err,dataShUser){
         if(err) throw err ;
+
+        var user = {} ; 
+        var users = [] ; 
 
         res.status(200);
         for(var i = 0 ; i < data.length; i++){
-             console.log('user : '+data[i].name);
+             console.log('user : '+dataShUser[i].name);
+            user.name = dataShUser[i].name ;
+            users.push(users);
         }
-        datas = data[1].name;
-        res.json(datas);
+     
+        data = dataShUser[1].name;
+        res.json(users);
         })
 }
+
+
+var authentication = function (req, res) {
+    var name = req.body.name ;
+    var ps = req.body.password ; 
+    Users.find({name: name ,password: ps },function(err,dataShUser){
+        if(err) console.log(err);
+        // throw err ;
+
+       if(dataShUser.length != 0 ){
+        console.log('user : '+dataShUser[0].name);
+        data = dataShUser[0].name;
+        msg = "Logged In";
+       }else{
+        msg = "Credentials Invalid";
+        console.log("Credentials Invalid");
+       }
+
+     
+        res.status(200);
+     
+        res.json(data + " : "+ msg);
+        })
+}
+
 
 var locationData = function (req, res) {
 
@@ -126,3 +157,4 @@ module.exports.DataMongoo = dataMongoo;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser; 
 module.exports.ShowUsers = showUsers;
+module.exports.Authentication = authentication; 
