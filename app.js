@@ -5,10 +5,6 @@ var bodyParser = require("body-parser");
 
 var PORT = process.env.PORT || 2000;
 
-app.get('/api/msg', (req, res) => {
-    server.SetMessage(req, res);
-});
-
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -19,17 +15,25 @@ app.post("/api/Location", function (req, res) {
   server.LocationData(req, res);
 });
 
-app.get('/api/data', (req, res) => {
-    server.DataMongoo(req, res);
+app.get('/api/msg', (req, res) => {
+    server.SetMessage(req, res);
 });
 
 app.post('/api/addUser', (req, res) => {
     server.AddUser(req, res);
 });
 
-
 app.get('/api/showUsers', (req, res) => {
     server.ShowUsers(req, res);
+});
+
+
+app.post('/api/addTrafficLight', (req, res) => {
+    server.AddNewTrafficLight(req, res);
+});
+
+app.post('/api/showTrafficLights', (req, res) => {
+    server.ShowTrafficLightLocation(req, res);
 });
 
 app.post('/api/login', (req, res) => {
