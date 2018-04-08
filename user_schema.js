@@ -15,8 +15,8 @@ var UserSchema = new Schema ({
         type:String,
         require: true, 
     },
-    mobile_number: {
-        type:Number,
+    vehical: {
+        type:String,
         require: true, 
     }
 });

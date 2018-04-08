@@ -148,7 +148,7 @@ var showUsers = function (req, res) {
             users.push(users);
         }
 
-        data = dataShUser[1].name;
+        data = dataShUser[0].name;
         res.json(users);
     })
 }
@@ -184,7 +184,7 @@ var locationData = function (req, res) {
     routeID = req.body.routeID;
 
     res.status(200);
-    datas = 'Location - ' + locationId + "  gpsLocation -" + gpsLocation + "  routeID - " + routeID;
+    datas = 'Location - ' + locationId + "  gpsLocation (longitude + latitude ) - " + gpsLocation + "( "+ req.body.longitude + " & " +req.body.longitude+ " )"+" routeID - " + routeID;
     res.json(datas);
 }
 
