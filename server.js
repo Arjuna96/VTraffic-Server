@@ -241,10 +241,7 @@ var addTrafficData = function (req, res) {
     })
 }
 
-<<<<<<< HEAD
-=======
 // req time api 
->>>>>>> 1523894143def9d2a129ce2ae2fc6a9d526460a0
 var requestTime = function (req, res) {
     var locationId = req.body.trafficLightId;
     var stateId = req.body.stateId;
