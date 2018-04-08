@@ -27,7 +27,7 @@ app.post('/api/register', (req, res) => {
     server.AddUser(req, res);
 });
 
-app.post('/api/getUsers', (req, res) => {
+app.post('/api/getUser', (req, res) => {
     server.ShowUsers(req, res);
 });
 
