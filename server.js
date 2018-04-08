@@ -229,6 +229,10 @@ var addTrafficData = function (req, res) {
     })
 }
 
+var requestTime = function (req, res) {
+    res.status(200).json({time: 100});
+}
+
 module.exports.SetMessage = setMessage;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser;
@@ -238,4 +242,5 @@ module.exports.ShowTrafficLightLocation = showTrafficLightLocation;
 module.exports.AddNewTrafficLight = addNewTrafficLight;  
 module.exports.UpdateUser = updateUser; 
 module.exports.SendMsgToArduino = sendMsgToArduino; 
-module.exports.AddTrafficData = addTrafficData; 
+module.exports.AddTrafficData = addTrafficData;
+module.exports.RequestTime = requestTime;
