@@ -143,6 +143,7 @@ var showUsers = function (req, res) {
                 users.push(users);
             }
     
+            // if no user data is returned from db
             if(dataShUser != '' ){
                 data = dataShUser[0].name;
                 res.json(data);
