@@ -229,6 +229,14 @@ var addTrafficData = function (req, res) {
     })
 }
 
+var requestTime = function (req, res) {
+    var locationId = req.body.trafficLightId;
+    var stateId = req.body.stateId;
+    var resObj = {Id: locationId, state: stateId, time: 100}
+    console.log(JSON.stringify(resObj));
+    res.status(200).json(resObj);
+}
+
 module.exports.SetMessage = setMessage;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser;
@@ -238,4 +246,5 @@ module.exports.ShowTrafficLightLocation = showTrafficLightLocation;
 module.exports.AddNewTrafficLight = addNewTrafficLight;  
 module.exports.UpdateUser = updateUser; 
 module.exports.SendMsgToArduino = sendMsgToArduino; 
-module.exports.AddTrafficData = addTrafficData; 
+module.exports.AddTrafficData = addTrafficData;
+module.exports.RequestTime = requestTime;
