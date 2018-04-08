@@ -106,7 +106,7 @@ var updateUser = function (req, res) {
         var name =  req.body.name ;
         var password =  req.body.password ;
         var email = req.body.password ;
-        var mobile_number = req.body.mobile ; 
+        var vehical = req.body.vehical ; 
 
         var query = {'name': editName}
 
@@ -124,9 +124,34 @@ var updateUser = function (req, res) {
 var showUsers = function (req, res) {
     var user = req.body.username ;
     // var email = req.body.email ;
-
+    console.log('user'+user);
     if(user != undefined){
         var findStr = {name : user} ;
+        console.log('user if'+user);
+
+        Users.find(findStr, function (err, dataShUser) {
+            if (err) throw err;
+    
+            var user = {};
+            var users = [];
+    
+            console.log('data'+dataShUser);
+            res.status(200);
+            for (var i = 0; i < dataShUser.length; i++) {
+                console.log('user : ' + dataShUser[i].name);
+                user.name = dataShUser[i].name;
+                users.push(users);
+            }
+    
+            if(dataShUser != '' ){
+                data = dataShUser[0].name;
+                res.json(data);
+            }else{
+                data = 'User Does not exist';
+                res.json(data);
+            }
+    
+        })
     }
     // else if(email != undefined){
     //     var findStr = {email : email} ;
@@ -135,24 +160,10 @@ var showUsers = function (req, res) {
     // }
     else{
         var findStr = {} ;
+        console.log('else');
     }
     
-    Users.find(findStr, function (err, dataShUser) {
-        if (err) throw err;
 
-        var user = {};
-        var users = [];
-
-        res.status(200);
-        for (var i = 0; i < data.length; i++) {
-            console.log('user : ' + dataShUser[i].name);
-            user.name = dataShUser[i].name;
-            users.push(users);
-        }
-
-        data = dataShUser[0].name;
-        res.json(users);
-    })
 }
 
 // user login
@@ -229,6 +240,7 @@ var addTrafficData = function (req, res) {
     })
 }
 
+// req time api 
 var requestTime = function (req, res) {
     var locationId = req.body.trafficLightId;
     var stateId = req.body.stateId;
