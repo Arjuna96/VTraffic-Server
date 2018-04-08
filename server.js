@@ -80,10 +80,10 @@ var setMessage = function (req, res) {
 // add  new user
 var addUser = function (req, res) {
     var newUser = Users({
-        name: req.body.name,
+        name: req.body.username,
         password: req.body.password,
         email: req.body.password,
-        mobile_number: req.body.mobile
+        vehical: req.body.vehical
     })
 
     newUser.save(function (err) {
@@ -178,10 +178,10 @@ var authentication = function (req, res) {
 // user location
 var locationData = function (req, res) {
 
-    locationId = req.body.locationID;
+    locationId = req.body.trafficLightId;
     // gpsLocation = req.body.gpsLocation;
-    gpsLocation = req.body.longitude + ","+ req.body.latitude ;
-    routeID = req.body.routeID;
+    gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
+    routeID = req.body.routeID; // button ID
 
     res.status(200);
     datas = 'Location - ' + locationId + "  gpsLocation (longitude + latitude ) - " + gpsLocation + "( "+ req.body.longitude + " & " +req.body.longitude+ " )"+" routeID - " + routeID;
