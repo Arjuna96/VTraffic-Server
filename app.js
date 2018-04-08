@@ -12,14 +12,16 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-app.post("/api/goGreen", function (req, res) {
-  server.LocationData(req, res);
-});
 
-// set api
+
+// test api
 app.get('/api/test', (req, res) => {
     server.SetMessage(req, res);
 });
+
+app.post("/api/goGreen", function (req, res) {
+    server.LocationData(req, res);
+  });
 
 app.post('/api/register', (req, res) => {
     server.AddUser(req, res);

@@ -122,16 +122,18 @@ var updateUser = function (req, res) {
 
 // show current users
 var showUsers = function (req, res) {
-    var user = req.body.name ;
-    var email = req.body.email ;
+    var user = req.body.username ;
+    // var email = req.body.email ;
 
     if(user != undefined){
         var findStr = {name : user} ;
-    }else if(email != undefined){
-        var findStr = {email : email} ;
-    }else if(user != undefined && email != undefined ){
-        var findStr = {name : user , email : email} ;
-    }else{
+    }
+    // else if(email != undefined){
+    //     var findStr = {email : email} ;
+    // }else if(user != undefined && email != undefined ){
+    //     var findStr = {name : user , email : email} ;
+    // }
+    else{
         var findStr = {} ;
     }
     
@@ -179,10 +181,12 @@ var authentication = function (req, res) {
 var locationData = function (req, res) {
 
     locationId = req.body.trafficLightId;
+    // locationId = 1 ;
     // gpsLocation = req.body.gpsLocation;
     gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
     routeID = req.body.routeId; // button ID
 
+    console.log(JSON.stringify(req.body));
     res.status(200);
     datas = 'Location - ' + locationId + "  gpsLocation (longitude + latitude ) - " + gpsLocation + "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )"+" routeID - " + routeID;
     res.json(datas);
