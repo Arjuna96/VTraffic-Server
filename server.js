@@ -122,7 +122,7 @@ var updateUser = function (req, res) {
 
 // show current users
 var showUsers = function (req, res) {
-    var user = req.body.username ;
+    var user = req.body.username;
     // var email = req.body.email ;
     console.log('user'+user);
     if(user != undefined){
@@ -145,10 +145,10 @@ var showUsers = function (req, res) {
     
             // if no user data is returned from db
             if(dataShUser != '' ){
-                data = dataShUser[0].name;
+                data = { user : dataShUser[0].name } ;
                 res.json(data);
             }else{
-                data = 'User Does not exist';
+                data = { user : 'User Does not exist'} ;
                 res.json(data);
             }
     
@@ -162,6 +162,10 @@ var showUsers = function (req, res) {
     else{
         var findStr = {} ;
         console.log('else');
+
+        res.status(200);
+        data = { user : 'User Does not exist'} ;
+        res.json(data);
     }
     
 
@@ -200,7 +204,7 @@ var locationData = function (req, res) {
 
     console.log(JSON.stringify(req.body));
     res.status(200);
-    datas = 'Location - ' + locationId + "  gpsLocation (longitude + latitude ) - " + gpsLocation + "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )"+" routeID - " + routeID;
+    datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
     res.json(datas);
 }
 
