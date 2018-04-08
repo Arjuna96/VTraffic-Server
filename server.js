@@ -230,7 +230,11 @@ var addTrafficData = function (req, res) {
 }
 
 var requestTime = function (req, res) {
-    res.status(200).json({time: 100});
+    var locationId = req.body.trafficLightId;
+    var stateId = req.body.stateId;
+    var resObj = {Id: locationId, state: stateId, time: 100}
+    console.log(JSON.stringify(resObj));
+    res.status(200).json(resObj);
 }
 
 module.exports.SetMessage = setMessage;
