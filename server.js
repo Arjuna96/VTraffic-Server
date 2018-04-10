@@ -204,7 +204,7 @@ var locationData = function (req, res) {
 
     console.log(JSON.stringify(req.body));
     res.status(200);
-    datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
+    datas = {Status: "success"};
     res.json(datas);
 }
 
