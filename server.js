@@ -115,7 +115,7 @@ var updateUser = function (req, res) {
             console.log('user' + data);
             res.status(200);
             data = dataUser;
-            res.json(data);
+            res.json({ message : 'Success'} );
         })
 
 }
@@ -182,30 +182,44 @@ var authentication = function (req, res) {
         if (dataShUser.length != 0) {
             console.log('user : ' + dataShUser[0].name);
             data = dataShUser[0].name;
-            msg = "Logged In";
+            // msg = "Logged In";
+            msg = { message : 'Success'} ;
         } else {
-            msg = "Credentials Invalid";
+            // msg = "Credentials Invalid";
+            msg = { message : 'Failed'}  ;
             console.log("Credentials Invalid");
         }
 
         res.status(200);
-        res.json(data + " : " + msg);
+        res.json(msg);
     })
 }
 
 // user location
 var locationData = function (req, res) {
 
-    locationId = req.body.trafficLightId;
-    // locationId = 1 ;
-    // gpsLocation = req.body.gpsLocation;
-    gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
-    routeID = req.body.routeId; // button ID
+    if(req.body.trafficLightId != undefined &&
+        req.body.userlongitude != undefined &&
+        req.body.userlatitude != undefined &&
+        req.body.routeId != undefined    
+    ){
+        locationId = req.body.trafficLightId;
+        // locationId = 1 ;
+        // gpsLocation = req.body.gpsLocation;
+        gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
+        routeID = req.body.routeId; // button ID
+    
+        console.log('go green '+JSON.stringify(req.body));
+        res.status(200);
+        datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
+        res.json(datas);
+    } else{
+        res.status(400);
+        datas = {message : 'Invalid Parameters'};
+        res.json(datas);
+    }
 
-    console.log(JSON.stringify(req.body));
-    res.status(200);
-    datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
-    res.json(datas);
+    
 }
 
 // api for arduino
