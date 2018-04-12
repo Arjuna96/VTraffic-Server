@@ -1,4 +1,4 @@
-var MongoClient = require('mongodb').MongoClient;
+// var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
 var assert = require('assert')
 
@@ -24,29 +24,40 @@ db.on('open', function () {
 // adding a new traffic light
 var addNewTrafficLight = function (req, res) {
 
-    var locationId = req.body.locationID;
-    var gpsLocation = req.body.gpsLocation;
-    var routeID = req.body.routeID;
-
-    var newLocation = Locations({
-        gpsLocation: gpsLocation,
-        routeID: routeID,
-        locationID: locationId
-    })
-
-
-    newLocation.save(function (err) {
-        if (err) throw err;
-
-        Locations.find({}, function (err, data) {
-            if (err) throw err;
-            console.log(data);
+    if(req.body.locationID != undefined && 
+        req.body.gpsLocation  != undefined &&
+        req.body.routeID != undefined  
+    ){
+        var locationId = req.body.locationID;
+        var gpsLocation = req.body.gpsLocation;
+        var routeID = req.body.routeID;
+    
+        var newLocation = Locations({
+            gpsLocation: gpsLocation,
+            routeID: routeID,
+            locationID: locationId
         })
-    })
+    
+    
+        newLocation.save(function (err) {
+            if (err) throw err;
+    
+            Locations.find({}, function (err, data) {
+                if (err) throw err;
+                console.log(data);
+            })
+        })
+    
+        res.status(200);
+        data =  {Status : 'Success'};
+        res.json(data);
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
 
-    res.status(200);
-    data = messages;
-    res.json(datas);
+
 }
 
 // show traffic light data
@@ -79,33 +90,50 @@ var setMessage = function (req, res) {
 
 // add  new user
 var addUser = function (req, res) {
-    var newUser = Users({
-        name: req.body.username,
-        password: req.body.password,
-        email: req.body.password,
-        vehical: req.body.vehical
-    })
 
-    newUser.save(function (err) {
-        if (err) throw err;
-
-        Users.find({}, function (err, dataUser) {
-            if (err) throw err;
-            console.log('user' + data);
-            res.status(200);
-            data = dataUser;
-            res.json(data);
+    if(req.body.username != undefined && 
+        req.body.password != undefined &&
+        req.body.email != undefined &&
+        req.body.vehical != undefined
+    ){
+        var newUser = Users({
+            name: req.body.username,
+            password: req.body.password,
+            email: req.body.email,
+            vehical: req.body.vehical
         })
-    })
+    
+        newUser.save(function (err) {
+            if (err) throw err;
+    
+            Users.find({}, function (err, dataUser) {
+                if (err) throw err;
+                console.log('user' + dataUser);
+                res.status(200);
+                data = {Status : 'Success'};
+                res.json(data);
+            })
+        })
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
+    
 }
 
 // update user
 var updateUser = function (req, res) {
-    
+
+    if(req.body.editName != undefined && 
+        req.body.name != undefined &&
+        req.body.password != undefined &&
+        req.body.email != undefined &&
+        req.body.vehical != undefined ){
         var editName = req.body.editName ;
         var name =  req.body.name ;
         var password =  req.body.password ;
-        var email = req.body.password ;
+        var email = req.body.email ;
         var vehical = req.body.vehical ; 
 
         var query = {'name': editName}
@@ -115,9 +143,13 @@ var updateUser = function (req, res) {
             console.log('user' + data);
             res.status(200);
             data = dataUser;
-            res.json({ message : 'Success'} );
+            res.json({ Status : 'Success'} );
         })
-
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
 }
 
 // show current users
@@ -167,8 +199,6 @@ var showUsers = function (req, res) {
         data = { user : 'User Does not exist'} ;
         res.json(data);
     }
-    
-
 }
 
 // user login
@@ -183,10 +213,10 @@ var authentication = function (req, res) {
             console.log('user : ' + dataShUser[0].name);
             data = dataShUser[0].name;
             // msg = "Logged In";
-            msg = { message : 'Success'} ;
+            msg = { Status : 'Success'} ;
         } else {
             // msg = "Credentials Invalid";
-            msg = { message : 'Failed'}  ;
+            msg = { Status : 'Failed'}  ;
             console.log("Credentials Invalid");
         }
 
@@ -216,7 +246,7 @@ var locationData = function (req, res) {
         res.json(datas);
     } else{
         res.status(400);
-        datas = {message : 'Invalid Parameters'};
+        datas = {Status : 'Invalid Parameters'};
         res.json(datas);
     }
 }
