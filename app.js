@@ -59,6 +59,10 @@ app.post('/api/requestTime', (req, res) => {
     server.RequestTime(req, res);
 });
 
+app.post('/api/updateState', (req, res) => {
+    server.UpdateState(req, res);
+});
+
 app.listen(PORT, function () {
     console.log('Working on port ' + PORT);
 });

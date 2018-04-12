@@ -211,15 +211,14 @@ var locationData = function (req, res) {
     
         console.log('go green '+JSON.stringify(req.body));
         res.status(200);
-        datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
+        // datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
+        datas = {Status: "success"};
         res.json(datas);
     } else{
         res.status(400);
         datas = {message : 'Invalid Parameters'};
         res.json(datas);
     }
-
-    
 }
 
 // api for arduino
@@ -268,6 +267,15 @@ var requestTime = function (req, res) {
     res.status(200).json(resObj);
 }
 
+// update current state api
+var updateState = function (req, res) {
+    var locationId = req.body.trafficLightId;
+    var stateId = req.body.stateId;
+    var resObj = "Success"
+    console.log(JSON.stringify(resObj));
+    res.status(200).json(resObj);
+}
+
 module.exports.SetMessage = setMessage;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser;
@@ -279,3 +287,4 @@ module.exports.UpdateUser = updateUser;
 module.exports.SendMsgToArduino = sendMsgToArduino; 
 module.exports.AddTrafficData = addTrafficData;
 module.exports.RequestTime = requestTime;
+module.exports.UpdateState = updateState;
