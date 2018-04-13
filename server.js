@@ -335,6 +335,13 @@ var requestTime = function (req, res) {
     if(req.body.trafficLightId != undefined && req.body.stateId != undefined){
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
+
+        Locations.find({locationID : locationId}, function (err, requests) {
+            if (err) throw err;
+            var reqCount = requests.length ; 
+            console.log('reqCount'+reqCount);
+        })
+
         var resObj = {Id: locationId, state: stateId, time: 100}
         console.log(JSON.stringify(resObj));
         res.status(200).json(resObj);
