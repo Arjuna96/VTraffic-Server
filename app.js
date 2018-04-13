@@ -20,7 +20,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.post("/api/goGreen", function (req, res) {
-    server.LocationData(req, res);
+    server.AddTrafficData(req, res);
   });
 
 app.post('/api/register', (req, res) => {
@@ -62,6 +62,11 @@ app.post('/api/requestTime', (req, res) => {
 app.post('/api/updateState', (req, res) => {
     server.UpdateState(req, res);
 });
+
+app.post('/api/resetTraffic', (req, res) => {
+    server.ResetTrafficData(req, res);
+});
+
 
 app.listen(PORT, function () {
     console.log('Working on port ' + PORT);

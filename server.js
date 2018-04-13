@@ -4,15 +4,15 @@ var assert = require('assert')
 
 var TrafficLight = require('./traffic_light_schema.js');
 var Users = require('./user_schema.js');
-var Traffic_Data = require('./traffic_data.schema.js');
+var Traffic_Data = require('./traffic_data_schema.js');
 
 var messages = [{ text: 'some text', owner: 'shanil' }, { text: 'other message', owner: 'arjuna' }];
 var data = '';
 
-var url = 'mongodb://localhost:27017/test';
-// var url = 'mongodb://localhost:27017/vtraffic';
+var db_url = 'mongodb://localhost:27017/test';
+// var db_url = 'mongodb://localhost:27017/vtraffic';
 
-mongoose.connect(url);
+mongoose.connect(db_url);
 
 var db = mongoose.connection;
 
@@ -243,7 +243,9 @@ var authentication = function (req, res) {
 }
 
 // user location
-var locationData = function (req, res) {
+
+//not using location data function now
+ var locationData = function (req, res) {
 
     if(req.body.trafficLightId != undefined &&
         req.body.userlongitude != undefined &&
@@ -304,32 +306,45 @@ var sendMsgToArduino = function(req,res){
 
 // add traffic data 
 
-// need to add parameter validation
 var addTrafficData = function (req, res) {
-    var newTrafficData = Traffic_Data({
-        TL1: req.body.TL1,
-        TL2: req.body.TL2,
-        TL3: req.body.TL3,
-        TL4: req.body.TL4,
-        TL5: req.body.TL5,
-        TL6: req.body.TL6,
-        TL7: req.body.TL7,
-        TL8: req.body.TL8,
-        LocationID : req.body.LocationID,
-        Time: ObjectId.getTimestamp() 
-    })
+    if(req.body.trafficLightId != undefined &&
+        req.body.userlongitude != undefined &&
+        req.body.userlatitude != undefined &&
+        req.body.routeId != undefined    
+    ){
+        locationId = req.body.trafficLightId;
+        // locationId = 1 ;
+        // gpsLocation = req.body.gpsLocation;
+        gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
+        routeID = req.body.routeId; // button ID
 
-    newTrafficData.save(function (err) {
-        if (err) throw err;
-
-        Traffic_Data.find({}, function (err, traffData) {
-            if (err) throw err;
-            console.log('user' + data);
-            res.status(200);
-            data = traffData;
-            res.json(data);
+        var newTrafficData = Traffic_Data({
+            gpsLocation: gpsLocation,
+            stateData : 1,
+            LocationID : req.body.LocationId,
+            Time: 1
+            // ObjectId.getTimestamp() 
         })
-    })
+
+        newTrafficData.save(function (err) {
+            if (err) throw err;
+    
+            Traffic_Data.find({}, function (err, traffData) {
+                if (err) throw err;
+                // console.log('user' + traffData);
+                console.log('go green '+JSON.stringify(req.body));
+                res.status(200);
+                // datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
+                datas = {Status: "success"};
+                res.json(datas);
+            })
+        }) 
+      
+    } else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
 }
 
 // req time api 
@@ -338,7 +353,7 @@ var requestTime = function (req, res) {
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
 
-        TrafficLight.find({locationID : locationId}, function (err, requests) {
+        Traffic_Data.find({locationID : locationId}, function (err, requests) {
             if (err) throw err;
             var reqCount = requests.length ; 
             console.log('reqCount'+reqCount);
@@ -371,6 +386,15 @@ var updateState = function (req, res) {
 
 }
 
+var resetTrafficData  = function (req, res) {
+    Traffic_Data.remove({}, function (err, resp) {
+        if (err) throw err;
+        // console.log('res'+resp);
+        var resObj = "Success"
+        res.status(200).json(resObj);
+    })
+}
+
 module.exports.SetMessage = setMessage;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser;
@@ -382,4 +406,5 @@ module.exports.UpdateUser = updateUser;
 module.exports.SendMsgToArduino = sendMsgToArduino; 
 module.exports.AddTrafficData = addTrafficData;
 module.exports.RequestTime = requestTime;
-module.exports.UpdateState = updateState;
+module.exports.UpdateState = updateState; 
+module.exports.ResetTrafficData = resetTrafficData;
