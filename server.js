@@ -154,75 +154,90 @@ var updateUser = function (req, res) {
 
 // show current users
 var showUsers = function (req, res) {
-    var user = req.body.username;
-    // var email = req.body.email ;
-    console.log('user'+user);
-    if(user != undefined){
-        var findStr = {name : user} ;
-        console.log('user if'+user);
 
-        Users.find(findStr, function (err, dataShUser) {
-            if (err) throw err;
+    if(req.body.username != undefined){
+        var user = req.body.username;
+        // var email = req.body.email ;
+        console.log('user'+user);
+        if(user != undefined){
+            var findStr = {name : user} ;
+            console.log('user if'+user);
     
-            var user = {};
-            var users = [];
+            Users.find(findStr, function (err, dataShUser) {
+                if (err) throw err;
+        
+                var user = {};
+                var users = [];
+        
+                console.log('data'+dataShUser);
+                res.status(200);
+                for (var i = 0; i < dataShUser.length; i++) {
+                    console.log('user : ' + dataShUser[i].name);
+                    user.name = dataShUser[i].name;
+                    users.push(users);
+                }
+        
+                // if no user data is returned from db
+                if(dataShUser != '' ){
+                    data = { Status : dataShUser[0].name } ;
+                    res.json(data);
+                }else{
+                    data = { Status : 'User Does not exist'} ;
+                    res.json(data);
+                }
+        
+            })
+        }
+        // else if(email != undefined){
+        //     var findStr = {email : email} ;
+        // }else if(user != undefined && email != undefined ){
+        //     var findStr = {name : user , email : email} ;
+        // }
+        else{
+            var findStr = {} ;
+            console.log('else');
     
-            console.log('data'+dataShUser);
             res.status(200);
-            for (var i = 0; i < dataShUser.length; i++) {
-                console.log('user : ' + dataShUser[i].name);
-                user.name = dataShUser[i].name;
-                users.push(users);
-            }
-    
-            // if no user data is returned from db
-            if(dataShUser != '' ){
-                data = { user : dataShUser[0].name } ;
-                res.json(data);
-            }else{
-                data = { user : 'User Does not exist'} ;
-                res.json(data);
-            }
-    
-        })
+            data = { Status : 'User Does not exist'} ;
+            res.json(data);
+        }
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
     }
-    // else if(email != undefined){
-    //     var findStr = {email : email} ;
-    // }else if(user != undefined && email != undefined ){
-    //     var findStr = {name : user , email : email} ;
-    // }
-    else{
-        var findStr = {} ;
-        console.log('else');
-
-        res.status(200);
-        data = { user : 'User Does not exist'} ;
-        res.json(data);
-    }
+    
 }
 
 // user login
 var authentication = function (req, res) {
-    var name = req.body.name;
-    var ps = req.body.password;
-    Users.find({ name: name, password: ps }, function (err, dataShUser) {
-        if (err) console.log(err);
-        // throw err ;
-
-        if (dataShUser.length != 0) {
-            console.log('user : ' + dataShUser[0].name);
-            data = dataShUser[0].name;
-            // msg = "Logged In";
-            msg = { Status : 'Success'} ;
-        } else {
-            // msg = "Credentials Invalid";
-            msg = { Status : 'Failed'}  ;
-            console.log("Credentials Invalid");
-        }
-
-        res.status(200);
-        res.json(msg);
-    })
+    if(req.body.name != undefined && req.body.password){
+        var name = req.body.name;
+        var ps = req.body.password;
+        Users.find({ name: name, password: ps }, function (err, dataShUser) {
+            if (err) console.log(err);
+            // throw err ;
+    
+            if (dataShUser.length != 0) {
+                console.log('user : ' + dataShUser[0].name);
+                data = dataShUser[0].name;
+                // msg = "Logged In";
+                msg = { Status : 'Success'} ;
+            } else {
+                // msg = "Credentials Invalid";
+                msg = { Status : 'Failed'}  ;
+                console.log("Credentials Invalid");
+            }
+    
+            res.status(200);
+            res.json(msg);
+        })
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
+    
 }
 
 // user location
@@ -253,14 +268,25 @@ var locationData = function (req, res) {
 
 // api for arduino
 var sendMsgToArduino = function(req,res){
-    var TL = req.body.TL ;
+
+    if(req.body.TL){
+        var TL = req.body.TL ;
     
-    res.status(200);
-    datas = 'Change State of -'+TL;
-    res.json(datas);
+        res.status(200);
+        // datas = 'Change State of -'+TL; 
+        datas =  {Status : 'Change State of -'+TL};
+        res.json(datas);
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
+
 }
 
 // add traffic data 
+
+// need to add parameter validation
 var addTrafficData = function (req, res) {
     var newTrafficData = Traffic_Data({
         TL1: req.body.TL1,
@@ -290,20 +316,34 @@ var addTrafficData = function (req, res) {
 
 // req time api 
 var requestTime = function (req, res) {
-    var locationId = req.body.trafficLightId;
-    var stateId = req.body.stateId;
-    var resObj = {Id: locationId, state: stateId, time: 100}
-    console.log(JSON.stringify(resObj));
-    res.status(200).json(resObj);
+    if(req.body.trafficLightId != undefined && req.body.stateId != undefined){
+        var locationId = req.body.trafficLightId;
+        var stateId = req.body.stateId;
+        var resObj = {Id: locationId, state: stateId, time: 100}
+        console.log(JSON.stringify(resObj));
+        res.status(200).json(resObj);
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
+
 }
 
 // update current state api
 var updateState = function (req, res) {
-    var locationId = req.body.trafficLightId;
-    var stateId = req.body.stateId;
-    var resObj = "Success"
-    console.log(JSON.stringify(resObj));
-    res.status(200).json(resObj);
+    if(req.body.trafficLightId != undefined && req.body.stateId != undefined){
+        var locationId = req.body.trafficLightId;
+        var stateId = req.body.stateId;
+        var resObj = "Success"
+        console.log(JSON.stringify(resObj));
+        res.status(200).json(resObj);
+    }else{
+        res.status(400);
+        datas = {Status : 'Invalid Parameters'};
+        res.json(datas);
+    }
+
 }
 
 module.exports.SetMessage = setMessage;
