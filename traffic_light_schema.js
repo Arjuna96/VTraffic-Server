@@ -8,7 +8,7 @@ var LocationSchema = new Schema ({
     // },
 
     gpsLocation: {
-        type:Number,
+        type:String,
         require: true, 
     },
     routeID: {

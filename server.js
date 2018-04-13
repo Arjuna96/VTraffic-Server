@@ -253,6 +253,22 @@ var locationData = function (req, res) {
         // gpsLocation = req.body.gpsLocation;
         gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
         routeID = req.body.routeId; // button ID
+
+        var newReq = Locations({
+            gpsLocation: gpsLocation,
+            routeID: routeID,
+            locationID: locationId
+        })
+    
+    
+        newReq.save(function (err) {
+            if (err) throw err;
+    
+            Locations.find({}, function (err, data) {
+                if (err) throw err;
+                console.log(data);
+            })
+        })
     
         console.log('go green '+JSON.stringify(req.body));
         res.status(200);
