@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var assert = require('assert')
 var Schema = mongoose.Schema ; 
-var LocationSchema = new Schema ({  
+var TrafficLightSchema = new Schema ({  
     // _id : {
     //     type:Number,
     //     require: true
@@ -11,7 +11,7 @@ var LocationSchema = new Schema ({
         type:String,
         require: true, 
     },
-    routeID: {
+    currentState: {
         type:Number,
         require: true, 
     },
@@ -19,7 +19,11 @@ var LocationSchema = new Schema ({
         type:Number,
         require: true,
     },
+    stateRef: {
+        type:String,
+        require: true, 
+    }
 });
 
-var Locations = mongoose.model('locations',LocationSchema);
-module.exports = Locations ;
+var TrafficLight = mongoose.model('trafficLight',TrafficLightSchema);
+module.exports = TrafficLight ;

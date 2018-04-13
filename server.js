@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var assert = require('assert')
 
-var Locations = require('./traffic_light_schema.js');
+var TrafficLight = require('./traffic_light_schema.js');
 var Users = require('./user_schema.js');
 var Traffic_Data = require('./traffic_data.schema.js');
 
@@ -31,15 +31,17 @@ var addNewTrafficLight = function (req, res) {
         var locationId = req.body.locationID;
         var gpsLocation = req.body.gpsLocation;
         var routeID = req.body.routeID;
+        var ref = '-'
     
-        var newLocation = Locations({
+        var newTrafficLight = TrafficLight({
             gpsLocation: gpsLocation,
-            routeID: routeID,
-            locationID: locationId
+            currentState: routeID,
+            locationID: locationId,
+            stateRef : ref
         })
     
     
-        newLocation.save(function (err) {
+        newTrafficLight.save(function (err) {
             if (err) throw err;
     
             Locations.find({}, function (err, data) {
@@ -72,7 +74,7 @@ var showTrafficLightLocation = function (req, res) {
     }
   
 
-        Locations.find(findStr, function (err, data) {
+    TrafficLight.find(findStr, function (err, data) {
             if (err) throw err;
             console.log(data);
             res.status(200);
@@ -254,7 +256,7 @@ var locationData = function (req, res) {
         gpsLocation = req.body.userlongitude + ","+ req.body.userlatitude ;
         routeID = req.body.routeId; // button ID
 
-        var newReq = Locations({
+        var newReq = TrafficLight({
             gpsLocation: gpsLocation,
             routeID: routeID,
             locationID: locationId
@@ -264,7 +266,7 @@ var locationData = function (req, res) {
         newReq.save(function (err) {
             if (err) throw err;
     
-            Locations.find({}, function (err, data) {
+            TrafficLight.find({}, function (err, data) {
                 if (err) throw err;
                 console.log(data);
             })
@@ -336,7 +338,7 @@ var requestTime = function (req, res) {
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
 
-        Locations.find({locationID : locationId}, function (err, requests) {
+        TrafficLight.find({locationID : locationId}, function (err, requests) {
             if (err) throw err;
             var reqCount = requests.length ; 
             console.log('reqCount'+reqCount);
