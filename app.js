@@ -47,9 +47,9 @@ app.post('/api/sendMsgToArduino', (req, res) => {
     server.SendMsgToArduino(req, res);
 });
 
-app.post('/api/addTrafficData', (req, res) => {
-    server.AddTrafficData(req, res);
-});
+// app.post('/api/addTrafficData', (req, res) => {
+//     server.AddTrafficData(req, res);
+// });
 
 app.post('/api/login', (req, res) => {
     server.Authentication(req, res);

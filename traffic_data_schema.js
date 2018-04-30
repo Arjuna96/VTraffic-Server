@@ -21,7 +21,11 @@ var Traffic_Data_Schema = new Schema ({
     Time: {
         type:Number,
         require: true,
-    }
+    },
+    trafficID : [
+        {id : Number,
+        lights:[],
+        requests:Number}]
 });
 
 var Traffic_Data = mongoose.model('Traffic_Data',Traffic_Data_Schema);
