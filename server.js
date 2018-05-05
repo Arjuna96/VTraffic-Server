@@ -93,16 +93,20 @@ var setMessage = function (req, res) {
 // add  new user
 var addUser = function (req, res) {
 
-    if (req.body.username != undefined &&
+    if (req.body.firstName != undefined &&
+        req.body.lastName != undefined &&
         req.body.password != undefined &&
         req.body.email != undefined &&
-        req.body.vehical != undefined
+        req.body.userRole != undefined &&
+        req.body.mobile != undefined
     ) {
         var newUser = Users({
-            name: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             password: req.body.password,
             email: req.body.email,
-            vehical: req.body.vehical
+            userRole: req.body.userRole,
+            mobile: req.body.mobile
         })
 
         newUser.save(function (err) {
