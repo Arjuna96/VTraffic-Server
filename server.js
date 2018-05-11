@@ -217,8 +217,8 @@ var showUsers = function (req, res) {
 
 // user login
 var authentication = function (req, res) {
-    if (req.body.name != undefined && req.body.password) {
-        var name = req.body.name;
+    if (req.body.username != undefined && req.body.password != undefined) {
+        var name = req.body.username;
         var ps = req.body.password;
         Users.find({ name: name, password: ps }, function (err, dataShUser) {
             if (err) console.log(err);
