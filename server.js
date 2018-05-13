@@ -368,9 +368,9 @@ var requestTime = function (req, res) {
             console.log('reqCount' + reqCount);
         })
 
-        var resObj = { Id: locationId, state: stateId, time: 100 }
+        var resObj = { Id: locationId, state: stateId, time: 10 }
         console.log(JSON.stringify(resObj));
-        res.status(200).json(resObj);
+        res.status(200).json(10);
     } else {
         res.status(400);
         datas = { Status: 'Invalid Parameters' };
