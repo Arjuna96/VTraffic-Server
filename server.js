@@ -428,8 +428,8 @@ var getCurrentState = function (req, res) {
 
         Traffic_Data.find({ LocationID: locationId }, function (err, requests) {
             if (err) throw err;
-            var stateID = requests[0].trafficID;
-            // var stateID = requests[0].trafficID[0].lights;
+            // var stateID = requests[0].trafficID;
+            var stateID = requests[0].trafficID[0].lights;
             console.log('stateID' + stateID);
             res.status(200).json(stateID);
         })
