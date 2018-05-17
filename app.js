@@ -68,6 +68,13 @@ app.post('/api/resetTraffic', (req, res) => {
 });
 
 
+app.post('/api/getCurrentState', (req, res) => {
+    server.GetCurrentState(req, res);
+});
+
+
+
+
 app.listen(PORT, function () {
     console.log('Working on port ' + PORT);
 });

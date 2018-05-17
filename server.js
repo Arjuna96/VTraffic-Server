@@ -25,11 +25,12 @@ db.on('open', function () {
 var addNewTrafficLight = function (req, res) {
 
     if (req.body.locationID != undefined &&
-        req.body.gpsLocation != undefined &&
+        req.body.Latitude != undefined && 
+        req.body.Longitude != undefined && 
         req.body.routeID != undefined
     ) {
         var locationId = req.body.locationID;
-        var gpsLocation = req.body.gpsLocation;
+        var gpsLocation = req.body.Latitude  + "," +  req.body.Longitude;
         var routeID = req.body.routeID;
         var ref = '-'
 
@@ -44,7 +45,7 @@ var addNewTrafficLight = function (req, res) {
         newTrafficLight.save(function (err) {
             if (err) throw err;
 
-            Locations.find({}, function (err, data) {
+            TrafficLight.find({}, function (err, data) {
                 if (err) throw err;
                 console.log(data);
             })
@@ -65,21 +66,28 @@ var addNewTrafficLight = function (req, res) {
 // show traffic light data
 var showTrafficLightLocation = function (req, res) {
 
-    var locationId = req.body.locationID;
+    var locationId = req.body.trafficLightId;
 
-    if (locationId != undefined) {
+    if (locationId != undefined && locationId != '*') {
         var findStr = { locationID: locationId };
-    } else {
+        TrafficLight.find(findStr, function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            res.status(200);
+            res.json(data);
+        })
+    } else if(locationId == '*') {
         var findStr = {};
+        TrafficLight.find(findStr, function (err, data) {
+            if (err) throw err;
+            console.log(data);
+            res.status(200);
+            res.json(data);
+        })
     }
 
 
-    TrafficLight.find(findStr, function (err, data) {
-        if (err) throw err;
-        console.log(data);
-        res.status(200);
-        res.json(data);
-    })
+
 }
 
 
@@ -165,7 +173,7 @@ var showUsers = function (req, res) {
         var user = req.body.username;
         // var email = req.body.email ;
         console.log('user' + user);
-        if (user != undefined) {
+        if (user != undefined && user != '*') {
             var findStr = { name: user };
             console.log('user if' + user);
 
@@ -188,7 +196,7 @@ var showUsers = function (req, res) {
                     data = { Status: dataShUser[0].name };
                     res.json(data);
                 } else {
-                    data = { Status: 'User Does not exist' };
+                    data = { Status: 'User Does not exist!' };
                     res.json(data);
                 }
 
@@ -199,13 +207,30 @@ var showUsers = function (req, res) {
         // }else if(user != undefined && email != undefined ){
         //     var findStr = {name : user , email : email} ;
         // }
-        else {
+        else if (user == '*') {
             var findStr = {};
             console.log('else');
 
-            res.status(200);
-            data = { Status: 'User Does not exist' };
-            res.json(data);
+
+            Users.find(findStr, function (err, dataShUser) {
+                if (err) throw err;
+
+                var user = {};
+                var users = [];
+
+                console.log('data' + dataShUser);
+                res.status(200);
+                data = { Status: dataShUser };
+                res.json(data);
+                // res.status(200);
+                // for (var i = 0; i < dataShUser.length; i++) {
+                //     console.log('user : ' + dataShUser[i].name);
+                //     user.name = dataShUser[i].name;
+                //     users.push(users);
+                // }
+
+            })
+           
         }
     } else {
         res.status(400);
@@ -308,7 +333,7 @@ var sendMsgToArduino = function (req, res) {
 
 }
 
-// add traffic data 
+// add traffic data  *** goGreen API ****
 
 var addTrafficData = function (req, res) {
     if (req.body.trafficLightId != undefined &&
@@ -325,10 +350,10 @@ var addTrafficData = function (req, res) {
         var newTrafficData = Traffic_Data({
             gpsLocation: gpsLocation,
             stateData: 1,
-            LocationID: req.body.LocationId,
+            LocationID: locationId,
             Time: 1,
             trafficID: [{
-                id: 2,
+                id: locationId,
                 lights: ['l1', 'l2'],
                 requests: 10
             }]
@@ -362,15 +387,15 @@ var requestTime = function (req, res) {
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
 
-        Traffic_Data.find({ locationID: locationId }, function (err, requests) {
+        Traffic_Data.find({ LocationID: locationId }, function (err, requests) {
             if (err) throw err;
             var reqCount = requests.length;
             console.log('reqCount' + reqCount);
         })
 
-        var resObj = { Id: locationId, state: stateId, time: 10 }
+        var resObj = { Id: locationId, state: stateId, time: 100 }
         console.log(JSON.stringify(resObj));
-        res.status(200).json(10);
+        res.status(200).json(resObj);
     } else {
         res.status(400);
         datas = { Status: 'Invalid Parameters' };
@@ -387,6 +412,31 @@ var updateState = function (req, res) {
         var resObj = "Success"
         console.log(JSON.stringify(resObj));
         res.status(200).json(resObj);
+    } else {
+        res.status(400);
+        datas = { Status: 'Invalid Parameters' };
+        res.json(datas);
+    }
+
+}
+
+
+// get current state api
+var getCurrentState = function (req, res) {
+    if (req.body.trafficLightId != undefined ) {
+        var locationId = req.body.trafficLightId;
+
+        Traffic_Data.find({ LocationID: locationId }, function (err, requests) {
+            if (err) throw err;
+            var stateID = requests[0].trafficID;
+            // var stateID = requests[0].trafficID[0].lights;
+            console.log('stateID' + stateID);
+            res.status(200).json(stateID);
+        })
+
+        // var resObj = "Success"
+        // console.log(JSON.stringify(resObj));
+
     } else {
         res.status(400);
         datas = { Status: 'Invalid Parameters' };
@@ -417,3 +467,4 @@ module.exports.AddTrafficData = addTrafficData;
 module.exports.RequestTime = requestTime;
 module.exports.UpdateState = updateState;
 module.exports.ResetTrafficData = resetTrafficData;
+module.exports.GetCurrentState = getCurrentState;
