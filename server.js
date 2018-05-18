@@ -438,17 +438,57 @@ var addTrafficData = function (req, res) {
 var requestTime = function (req, res) {
     if (req.body.trafficLightId != undefined && req.body.stateId != undefined) {
         var locationId = req.body.trafficLightId;
-        var stateId = req.body.stateId;
+        var stateId = (req.body.stateId).toString();
 
-        Traffic_Data.find({ LocationID: locationId }, function (err, requests) {
+        Traffic_Data.find({ LocationID: locationId , stateData: stateId}, function (err, requests) {
             if (err) throw err;
             var reqCount = requests.length;
+            console.log('req'+requests[0]);
+            // console.log(requests[0].trafficID[stateId].requests);
             console.log('reqCount' + reqCount);
+
+            var resObj = { Id: locationId, state: stateId, time: 10 }
+
+            if(reqCount <= 5){
+                resObj = { Id: locationId, state: stateId, time: 30 }
+            }else if(reqCount <= 10){
+                resObj = { Id: locationId, state: stateId, time: 60 }
+            }else if(reqCount <= 30){
+                resObj = { Id: locationId, state: stateId, time: 140 }
+            }else if(reqCount <= 50){
+                resObj = { Id: locationId, state: stateId, time: 200 }
+            }else{
+                resObj = { Id: locationId, state: stateId, time: 600 }
+            }
+
+            // switch (true) {
+            //     case (reqCount < 5 )  :
+            //          resObj = { Id: locationId, state: stateId, time: 30 }
+            //         break;
+            //     case (reqCount < 5 && reqCount > 10) :
+            //           resObj = { Id: locationId, state: stateId, time: 60}
+            //         break;
+            //     case (reqCount < 10 && reqCount > 15):
+            //          resObj = { Id: locationId, state: stateId, time: 30 }
+            //         break;
+            //     case (reqCount < 15 && reqCount > 20):
+            //          resObj = { Id: locationId, state: stateId, time: 40 }
+            //         break;
+            //     case (reqCount < 20 && reqCount > 25):
+            //          resObj = { Id: locationId, state: stateId, time: 50 }
+            //         break;
+            //     case (reqCount < 25 && reqCount > 30):
+            //          resObj = { Id: locationId, state: stateId, time: 60 }
+            //         break;
+            //     case (reqCount < 30 && reqCount > 1000):
+            //          resObj = { Id: locationId, state: stateId, time: 70 }
+            // }
+            
+            console.log(JSON.stringify(resObj));
+            res.status(200).json(resObj.time);
         })
 
-        var resObj = { Id: locationId, state: stateId, time: 100 }
-        console.log(JSON.stringify(resObj));
-        res.status(200).json(resObj);
+
     } else {
         res.status(400);
         datas = { Status: 'Invalid Parameters' };
@@ -463,7 +503,7 @@ var updateState = function (req, res) {
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
 
-        var query = { 'locationID': locationId }
+        var query = { 'locationID': locationId}
 
         TrafficLight.update(query, { $set: { state:stateId } }, function (err, dataUser) {
             if (err) throw err;
@@ -472,6 +512,17 @@ var updateState = function (req, res) {
             data = dataUser;
             res.json({ Status: 'Success' });
         })
+
+        var queryRemove = { 'LocationID': locationId }
+        Traffic_Data.remove(queryRemove, function (err, dataUser) {
+            if (err) throw err;
+            console.log("state removed ");
+            res.status(200);
+            data = dataUser;
+            // res.json({ Status: 'Success' });
+        })
+
+
 
         // var resObj = "Success"
         // console.log(JSON.stringify(resObj));
@@ -518,6 +569,61 @@ var resetTrafficData = function (req, res) {
     })
 }
 
+
+// add traffic data  *** bulk goGreen API ****
+
+var addBulkTrafficData = function (req, res) {
+    if (req.body.trafficLightId != undefined &&
+        req.body.userlongitude != undefined &&
+        req.body.userlatitude != undefined &&
+        req.body.routeId != undefined &&
+        req.body.count != undefined
+    ) {
+        locationId = req.body.trafficLightId;
+        gpsLocation = req.body.userlongitude + "," + req.body.userlatitude;
+        routeID = req.body.routeId; // button ID
+        count = req.body.count; 
+
+        // updateStateNo = "trafficID"+routeID;
+
+        // TrafficLight.update({ locationId: locationId },{$set: {updateStateNo: {requests: count }}}, function (err, bulk) {
+        //     if (err) throw err;
+        //     console.log("state updated to "+count);
+        //     res.status(200);
+        //     data = bulk;
+        //     res.json({ Status: 'Success'+JSON.stringify(bulk) });
+        // })
+        for(var i =0 ; i<count;i++){
+            var newTrafficData = Traffic_Data({
+                gpsLocation: gpsLocation,
+                stateData: routeID,
+                LocationID: locationId,
+                Time: 1
+            })
+    
+            newTrafficData.save(function (err) {
+                if (err) throw err;
+    
+                Traffic_Data.find({}, function (err, traffData) {
+                    if (err) throw err;
+                })
+            })
+        }
+
+        console.log("state updated to "+count);
+        res.status(200);
+        res.json({ Status: 'Success'});
+
+
+
+    } else {
+        res.status(400);
+        datas = { Status: 'Invalid Parameters' };
+        res.json(datas);
+    }
+}
+
+
 module.exports.SetMessage = setMessage;
 module.exports.LocationData = locationData;
 module.exports.AddUser = addUser;
@@ -532,3 +638,4 @@ module.exports.RequestTime = requestTime;
 module.exports.UpdateState = updateState;
 module.exports.ResetTrafficData = resetTrafficData;
 module.exports.GetCurrentState = getCurrentState;
+module.exports.AddBulkTrafficData = addBulkTrafficData;

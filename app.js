@@ -73,6 +73,13 @@ app.post('/api/getCurrentState', (req, res) => {
 });
 
 
+app.post('/api/addBulkTrafficData', (req, res) => {
+    server.AddBulkTrafficData(req, res);
+});
+
+
+
+
 
 
 app.listen(PORT, function () {
