@@ -4,6 +4,7 @@ var assert = require('assert')
 
 var TrafficLight = require('./traffic_light_schema.js');
 var Users = require('./user_schema.js');
+var UserDetails = require('./userDetails_schema.js');
 var Traffic_Data = require('./traffic_data_schema.js');
 
 var messages = [{ text: 'some text', owner: 'shanil' }, { text: 'other message', owner: 'arjuna' }];
@@ -160,7 +161,7 @@ var addUser = function (req, res) {
         req.body.userRole != undefined &&
         req.body.mobile != undefined
     ) {
-        var newUser = Users({
+        var newUser = UserDetails({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             password: req.body.password,
@@ -172,7 +173,7 @@ var addUser = function (req, res) {
         newUser.save(function (err) {
             if (err) throw err;
 
-            Users.find({}, function (err, dataUser) {
+            UserDetails.find({}, function (err, dataUser) {
                 if (err) throw err;
                 console.log('user' + dataUser);
                 res.status(200);
@@ -449,16 +450,16 @@ var requestTime = function (req, res) {
 
             var resObj = { Id: locationId, state: stateId, time: 10 }
 
-            if(reqCount <= 5){
+            if(reqCount <= 25){
+                resObj = { Id: locationId, state: stateId, time: 20 }
+            }else if(reqCount <= 75){
                 resObj = { Id: locationId, state: stateId, time: 30 }
-            }else if(reqCount <= 10){
+            }else if(reqCount <= 125){
+                resObj = { Id: locationId, state: stateId, time: 40 }
+            }else if(reqCount <= 200){
                 resObj = { Id: locationId, state: stateId, time: 60 }
-            }else if(reqCount <= 30){
-                resObj = { Id: locationId, state: stateId, time: 140 }
-            }else if(reqCount <= 50){
-                resObj = { Id: locationId, state: stateId, time: 200 }
             }else{
-                resObj = { Id: locationId, state: stateId, time: 600 }
+                resObj = { Id: locationId, state: stateId, time: 75 }
             }
 
             // switch (true) {
