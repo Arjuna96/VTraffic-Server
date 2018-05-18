@@ -467,6 +467,7 @@ var updateState = function (req, res) {
 
         TrafficLight.update(query, { $set: { state:stateId } }, function (err, dataUser) {
             if (err) throw err;
+            console.log("state updated to "+stateId);
             res.status(200);
             data = dataUser;
             res.json({ Status: 'Success' });
