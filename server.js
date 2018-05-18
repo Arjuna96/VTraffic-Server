@@ -493,8 +493,8 @@ var getCurrentState = function (req, res) {
             if (err) throw err;
             // var stateID = requests[0].trafficID;
             var stateID = requests[0].state;
-            console.log('Current state' + stateID);
-            res.status(200).json('Current state : ' +stateID);
+            console.log({Current_state : stateID });
+            res.status(200).json({Current_state : stateID });
         })
 
         // var resObj = "Success"
