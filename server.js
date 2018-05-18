@@ -514,7 +514,7 @@ var updateState = function (req, res) {
             res.json({ Status: 'Success' });
         })
 
-        var queryRemove = { 'LocationID': locationId }
+        var queryRemove = { 'LocationID': locationId ,"stateData":stateId}
         Traffic_Data.remove(queryRemove, function (err, dataUser) {
             if (err) throw err;
             console.log("state removed ");
@@ -611,7 +611,7 @@ var addBulkTrafficData = function (req, res) {
             })
         }
 
-        console.log("state updated to "+count);
+        console.log("inserted "+count);
         res.status(200);
         res.json({ Status: 'Success'});
 
