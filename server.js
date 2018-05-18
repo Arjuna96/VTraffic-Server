@@ -245,10 +245,10 @@ var showUsers = function (req, res) {
 
                 // if no user data is returned from db
                 if (dataShUser != '') {
-                    data = { Status: dataShUser[0].name };
+                    data =  dataShUser[0].name ;
                     res.json(data);
                 } else {
-                    data = { Status: 'User Does not exist!' };
+                    data = 'User Does not exist!' ;
                     res.json(data);
                 }
 
@@ -272,7 +272,7 @@ var showUsers = function (req, res) {
 
                 console.log('data' + dataShUser);
                 res.status(200);
-                data = { Status: dataShUser };
+                data = dataShUser ;
                 res.json(data);
                 // res.status(200);
                 // for (var i = 0; i < dataShUser.length; i++) {
