@@ -6,18 +6,36 @@ var Traffic_Light_Schema = new Schema ({
         type:String,
         require: true, 
     },
-    currentState: {
-        type:Number,
+    junctionType: {
+        type:String,
         require: true, 
     },
     locationID: {
         type:Number,
         require: true,
     },
-    stateRef: {
+    state : {
         type:String,
         require: true, 
-    }
+    }, 
+    locationName: {
+        type:String,
+        require: true,
+    },
+    trafficID : [
+        {id : Number,
+        lights:[],
+        requests:Number},
+        {id : Number,
+        lights:[],
+        requests:Number}
+        ,
+        {id : Number,
+        lights:[],
+        requests:Number},
+        {id : Number,
+         lights:[],
+         requests:Number}]
 });
 
 var TrafficLight = mongoose.model('traffic_Light',Traffic_Light_Schema);

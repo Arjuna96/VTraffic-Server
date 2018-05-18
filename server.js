@@ -27,19 +27,71 @@ var addNewTrafficLight = function (req, res) {
     if (req.body.locationID != undefined &&
         req.body.Latitude != undefined && 
         req.body.Longitude != undefined && 
-        req.body.routeID != undefined
+        req.body.junctionType != undefined && 
+        req.body.locationName != undefined
     ) {
         var locationId = req.body.locationID;
         var gpsLocation = req.body.Latitude  + "," +  req.body.Longitude;
-        var routeID = req.body.routeID;
-        var ref = '-'
+        var junctionType = req.body.junctionType;
+        var locationName =  req.body.locationName;
+        // var ref = '-'
 
-        var newTrafficLight = TrafficLight({
-            gpsLocation: gpsLocation,
-            currentState: routeID,
-            locationID: locationId,
-            stateRef: ref
-        })
+        if(junctionType == "4"){
+            var newTrafficLight = TrafficLight({
+                gpsLocation: gpsLocation,
+                junctionType: junctionType,
+                locationID: locationId,
+                state: 0,
+                locationName : locationName,
+                trafficID: [{
+                        id: 0,
+                        lights: ['L1', 'L5','L7'],
+                        requests: 0
+                    },
+                    {
+                        id: 1,
+                        lights: ['L2', 'L6','L8'],
+                        requests: 0
+                    },
+                    {
+                        id: 2,
+                        lights: ['L3', 'L7','L9'],
+                        requests: 0
+                    },
+                    {
+                        id: 3,
+                        lights: ['L4', 'L11','L10'],
+                        requests: 0
+                    }
+                    ]
+            })
+
+        }else if(junctionType == "3"){
+
+            var newTrafficLight = TrafficLight({
+                gpsLocation: gpsLocation,
+                junctionType: junctionType,
+                locationID: locationId,
+                state: 0,
+                locationName : locationName,
+                trafficID: [{
+                    id: 0,
+                    lights: ['L1', 'L5','L7'],
+                    requests: 0
+                },
+                {
+                    id: 1,
+                    lights: ['L2', 'L6','L8'],
+                    requests: 0
+                },
+                {
+                    id: 2,
+                    lights: ['L3', 'L7','L9'],
+                    requests: 0
+                }]
+            })
+        }
+
 
 
         newTrafficLight.save(function (err) {
@@ -154,7 +206,7 @@ var updateUser = function (req, res) {
 
         Users.update(query, { $set: { name: name } }, function (err, dataUser) {
             if (err) throw err;
-            console.log('user' + data);
+            console.log('user' + dataUser);
             res.status(200);
             data = dataUser;
             res.json({ Status: 'Success' });
@@ -351,12 +403,13 @@ var addTrafficData = function (req, res) {
             gpsLocation: gpsLocation,
             stateData: 1,
             LocationID: locationId,
-            Time: 1,
-            trafficID: [{
-                id: locationId,
-                lights: ['l1', 'l2'],
-                requests: 10
-            }]
+            Time: 1
+            // ,
+            // trafficID: [{
+            //     id: locationId,
+            //     lights: ['L1', 'L2'],
+            //     requests: 10
+            // }]
             // ObjectId.getTimestamp() 
         })
 
@@ -409,9 +462,19 @@ var updateState = function (req, res) {
     if (req.body.trafficLightId != undefined && req.body.stateId != undefined) {
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
-        var resObj = "Success"
-        console.log(JSON.stringify(resObj));
-        res.status(200).json(resObj);
+
+        var query = { 'locationID': locationId }
+
+        TrafficLight.update(query, { $set: { state:stateId } }, function (err, dataUser) {
+            if (err) throw err;
+            res.status(200);
+            data = dataUser;
+            res.json({ Status: 'Success' });
+        })
+
+        // var resObj = "Success"
+        // console.log(JSON.stringify(resObj));
+        // res.status(200).json(resObj);
     } else {
         res.status(400);
         datas = { Status: 'Invalid Parameters' };
@@ -426,12 +489,12 @@ var getCurrentState = function (req, res) {
     if (req.body.trafficLightId != undefined ) {
         var locationId = req.body.trafficLightId;
 
-        Traffic_Data.find({ LocationID: locationId }, function (err, requests) {
+        TrafficLight.find({ locationID: locationId }, function (err, requests) {
             if (err) throw err;
             // var stateID = requests[0].trafficID;
-            var stateID = requests[0].trafficID[0].lights;
-            console.log('stateID' + stateID);
-            res.status(200).json(stateID);
+            var stateID = requests[0].state;
+            console.log('Current state' + stateID);
+            res.status(200).json('Current state : ' +stateID);
         })
 
         // var resObj = "Success"
