@@ -3,7 +3,7 @@ var app = express();
 var server = require("./server");
 var bodyParser = require("body-parser");
 
-
+// host port
 var PORT = process.env.PORT || 2000;
 
 app.use(bodyParser.urlencoded({
@@ -47,10 +47,6 @@ app.post('/api/sendMsgToArduino', (req, res) => {
     server.SendMsgToArduino(req, res);
 });
 
-// app.post('/api/addTrafficData', (req, res) => {
-//     server.AddTrafficData(req, res);
-// });
-
 app.post('/api/login', (req, res) => {
     server.Authentication(req, res);
 });
@@ -71,7 +67,6 @@ app.post('/api/resetTraffic', (req, res) => {
 app.post('/api/getCurrentState', (req, res) => {
     server.GetCurrentState(req, res);
 });
-
 
 app.post('/api/addBulkTrafficData', (req, res) => {
     server.AddBulkTrafficData(req, res);

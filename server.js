@@ -10,9 +10,10 @@ var Traffic_Data = require('./traffic_data_schema.js');
 var messages = [{ text: 'some text', owner: 'shanil' }, { text: 'other message', owner: 'arjuna' }];
 var data = '';
 
+// mongodb url
 var db_url = 'mongodb://localhost:27017/test';
-// var db_url = 'mongodb://localhost:27017/vtraffic';
 
+// db connection using mongoose
 mongoose.connect(db_url);
 
 var db = mongoose.connection;
@@ -25,6 +26,7 @@ db.on('open', function () {
 // adding a new traffic light
 var addNewTrafficLight = function (req, res) {
 
+    // parameter validation
     if (req.body.locationID != undefined &&
         req.body.Latitude != undefined && 
         req.body.Longitude != undefined && 
@@ -35,7 +37,6 @@ var addNewTrafficLight = function (req, res) {
         var gpsLocation = req.body.Latitude  + "," +  req.body.Longitude;
         var junctionType = req.body.junctionType;
         var locationName =  req.body.locationName;
-        // var ref = '-'
 
         if(junctionType == "4"){
             var newTrafficLight = TrafficLight({
@@ -121,6 +122,7 @@ var showTrafficLightLocation = function (req, res) {
 
     var locationId = req.body.trafficLightId;
 
+    // parameter validation
     if (locationId != undefined && locationId != '*') {
         var findStr = { locationID: locationId };
         TrafficLight.find(findStr, function (err, data) {
@@ -153,7 +155,7 @@ var setMessage = function (req, res) {
 
 // add  new user
 var addUser = function (req, res) {
-
+    // parameter validation
     if (req.body.firstName != undefined &&
         req.body.lastName != undefined &&
         req.body.password != undefined &&
@@ -221,10 +223,9 @@ var updateUser = function (req, res) {
 
 // show current users
 var showUsers = function (req, res) {
-
+    // parameter validation
     if (req.body.username != undefined) {
         var user = req.body.username;
-        // var email = req.body.email ;
         console.log('user' + user);
         if (user != undefined && user != '*') {
             var findStr = { name: user };
@@ -255,12 +256,7 @@ var showUsers = function (req, res) {
 
             })
         }
-        // else if(email != undefined){
-        //     var findStr = {email : email} ;
-        // }else if(user != undefined && email != undefined ){
-        //     var findStr = {name : user , email : email} ;
-        // }
-        else if (user == '*') {
+        else if (user == '*') {  // get user list
             var findStr = {};
             console.log('else');
 
@@ -275,12 +271,6 @@ var showUsers = function (req, res) {
                 res.status(200);
                 data = dataShUser ;
                 res.json(data);
-                // res.status(200);
-                // for (var i = 0; i < dataShUser.length; i++) {
-                //     console.log('user : ' + dataShUser[i].name);
-                //     user.name = dataShUser[i].name;
-                //     users.push(users);
-                // }
 
             })
            
@@ -295,20 +285,20 @@ var showUsers = function (req, res) {
 
 // user login
 var authentication = function (req, res) {
+    // parameter validation
     if (req.body.username != undefined && req.body.password != undefined) {
         var name = req.body.username;
         var ps = req.body.password;
         Users.find({ name: name, password: ps }, function (err, dataShUser) {
             if (err) console.log(err);
-            // throw err ;
 
             if (dataShUser.length != 0) {
                 console.log('user : ' + dataShUser[0].name);
                 data = dataShUser[0].name;
-                // msg = "Logged In";
+
                 msg = { Status: 'Success' };
             } else {
-                // msg = "Credentials Invalid";
+
                 msg = { Status: 'Failed' };
                 console.log("Credentials Invalid");
             }
@@ -335,8 +325,6 @@ var locationData = function (req, res) {
         req.body.routeId != undefined
     ) {
         locationId = req.body.trafficLightId;
-        // locationId = 1 ;
-        // gpsLocation = req.body.gpsLocation;
         gpsLocation = req.body.userlongitude + "," + req.body.userlatitude;
         routeID = req.body.routeId; // button ID
 
@@ -358,7 +346,6 @@ var locationData = function (req, res) {
 
         console.log('go green ' + JSON.stringify(req.body));
         res.status(200);
-        // datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
         datas = { Status: "success" };
         res.json(datas);
     } else {
@@ -370,12 +357,11 @@ var locationData = function (req, res) {
 
 // api for arduino
 var sendMsgToArduino = function (req, res) {
-
+    // parameter validation
     if (req.body.TL) {
         var TL = req.body.TL;
 
         res.status(200);
-        // datas = 'Change State of -'+TL; 
         datas = { Status: 'Change State of -' + TL };
         res.json(datas);
     } else {
@@ -389,14 +375,13 @@ var sendMsgToArduino = function (req, res) {
 // add traffic data  *** goGreen API ****
 
 var addTrafficData = function (req, res) {
+    // parameter validation
     if (req.body.trafficLightId != undefined &&
         req.body.userlongitude != undefined &&
         req.body.userlatitude != undefined &&
         req.body.routeId != undefined
     ) {
         locationId = req.body.trafficLightId;
-        // locationId = 1 ;
-        // gpsLocation = req.body.gpsLocation;
         gpsLocation = req.body.userlongitude + "," + req.body.userlatitude;
         routeID = req.body.routeId; // button ID
 
@@ -405,24 +390,15 @@ var addTrafficData = function (req, res) {
             stateData: 1,
             LocationID: locationId,
             Time: 1
-            // ,
-            // trafficID: [{
-            //     id: locationId,
-            //     lights: ['L1', 'L2'],
-            //     requests: 10
-            // }]
-            // ObjectId.getTimestamp() 
-        })
+            })
 
         newTrafficData.save(function (err) {
             if (err) throw err;
 
             Traffic_Data.find({}, function (err, traffData) {
                 if (err) throw err;
-                // console.log('user' + traffData);
                 console.log('go green ' + JSON.stringify(req.body));
                 res.status(200);
-                // datas = {'Location':  locationId ,'gpsLocation (longitude + latitude )' : "( "+ req.body.userlongitude + " & " +req.body.userlatitude+ " )" , 'routeID'  : routeID};
                 datas = { Status: "success" };
                 res.json(datas);
             })
@@ -437,6 +413,7 @@ var addTrafficData = function (req, res) {
 
 // req time api 
 var requestTime = function (req, res) {
+    // parameter validation
     if (req.body.trafficLightId != undefined && req.body.stateId != undefined) {
         var locationId = req.body.trafficLightId;
         var stateId = (req.body.stateId).toString();
@@ -445,7 +422,6 @@ var requestTime = function (req, res) {
             if (err) throw err;
             var reqCount = requests.length;
             console.log('req'+requests[0]);
-            // console.log(requests[0].trafficID[stateId].requests);
             console.log('reqCount' + reqCount);
 
             var resObj = { Id: locationId, state: stateId, time: 10 }
@@ -500,6 +476,7 @@ var requestTime = function (req, res) {
 
 // update current state api
 var updateState = function (req, res) {
+    // parameter validation
     if (req.body.trafficLightId != undefined && req.body.stateId != undefined) {
         var locationId = req.body.trafficLightId;
         var stateId = req.body.stateId;
@@ -520,14 +497,8 @@ var updateState = function (req, res) {
             console.log("state removed ");
             res.status(200);
             data = dataUser;
-            // res.json({ Status: 'Success' });
         })
 
-
-
-        // var resObj = "Success"
-        // console.log(JSON.stringify(resObj));
-        // res.status(200).json(resObj);
     } else {
         res.status(400);
         datas = { Status: 'Invalid Parameters' };
@@ -539,19 +510,16 @@ var updateState = function (req, res) {
 
 // get current state api
 var getCurrentState = function (req, res) {
+    // parameter validation
     if (req.body.trafficLightId != undefined ) {
         var locationId = req.body.trafficLightId;
 
         TrafficLight.find({ locationID: locationId }, function (err, requests) {
             if (err) throw err;
-            // var stateID = requests[0].trafficID;
             var stateID = requests[0].state;
             console.log({Current_state : stateID });
             res.status(200).json({Current_state : stateID });
         })
-
-        // var resObj = "Success"
-        // console.log(JSON.stringify(resObj));
 
     } else {
         res.status(400);
@@ -564,7 +532,6 @@ var getCurrentState = function (req, res) {
 var resetTrafficData = function (req, res) {
     Traffic_Data.remove({}, function (err, resp) {
         if (err) throw err;
-        // console.log('res'+resp);
         var resObj = "Success"
         res.status(200).json(resObj);
     })
@@ -574,6 +541,7 @@ var resetTrafficData = function (req, res) {
 // add traffic data  *** bulk goGreen API ****
 
 var addBulkTrafficData = function (req, res) {
+    // parameter validation
     if (req.body.trafficLightId != undefined &&
         req.body.userlongitude != undefined &&
         req.body.userlatitude != undefined &&
@@ -585,15 +553,6 @@ var addBulkTrafficData = function (req, res) {
         routeID = req.body.routeId; // button ID
         count = req.body.count; 
 
-        // updateStateNo = "trafficID"+routeID;
-
-        // TrafficLight.update({ locationId: locationId },{$set: {updateStateNo: {requests: count }}}, function (err, bulk) {
-        //     if (err) throw err;
-        //     console.log("state updated to "+count);
-        //     res.status(200);
-        //     data = bulk;
-        //     res.json({ Status: 'Success'+JSON.stringify(bulk) });
-        // })
         for(var i =0 ; i<count;i++){
             var newTrafficData = Traffic_Data({
                 gpsLocation: gpsLocation,
